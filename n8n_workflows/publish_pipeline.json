@@ -1,0 +1,159 @@
+{
+  "name": "Rohit AI OS - Content Approval Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "minutes", "minutesInterval": 15 }] }
+      },
+      "id": "1",
+      "name": "Poll Every 15 Min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://YOUR_VPS_IP:8000/publish/queue",
+        "method": "GET"
+      },
+      "id": "2",
+      "name": "Fetch Approval Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [{ "value1": "={{ $json.length }}", "operation": "larger", "value2": 0 }]
+        }
+      },
+      "id": "3",
+      "name": "Has Pending Items?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": { "batchSize": 1, "options": {} },
+      "id": "4",
+      "name": "Loop Over Tasks",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [900, 220]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=📝 *New content awaiting approval*\n\n*Type:* {{ $json.task_type }}\n*Topic:* {{ $json.input }}\n\n*Preview:*\n{{ $json.output_preview }}\n\n✅ Approve: http://YOUR_VPS_IP:8000/publish/{{ $json.task_id }}/approve\n❌ Reject: http://YOUR_VPS_IP:8000/publish/{{ $json.task_id }}/reject\n\n_Or call from N8N using the webhooks below._",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "5",
+      "name": "Send Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1120, 220],
+      "credentials": { "telegramApi": { "id": "YOUR_TELEGRAM_CREDENTIAL_ID", "name": "Telegram" } }
+    },
+    {
+      "parameters": {
+        "path": "approve",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "6",
+      "name": "Approve Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 560]
+    },
+    {
+      "parameters": {
+        "url": "=http://YOUR_VPS_IP:8000/publish/{{ $json.query.task_id }}/approve",
+        "method": "POST"
+      },
+      "id": "7",
+      "name": "Call Approve API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 560]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"message\": \"Approved and published\", \"task_id\": \"{{ $json.query.task_id }}\" }"
+      },
+      "id": "8",
+      "name": "Respond Approved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 560]
+    },
+    {
+      "parameters": {
+        "path": "reject",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "9",
+      "name": "Reject Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 720]
+    },
+    {
+      "parameters": {
+        "url": "=http://YOUR_VPS_IP:8000/publish/{{ $json.query.task_id }}/reject",
+        "method": "POST"
+      },
+      "id": "10",
+      "name": "Call Reject API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 720]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"message\": \"Rejected\", \"task_id\": \"{{ $json.query.task_id }}\" }"
+      },
+      "id": "11",
+      "name": "Respond Rejected",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 720]
+    }
+  ],
+  "connections": {
+    "Poll Every 15 Min": {
+      "main": [[{ "node": "Fetch Approval Queue", "type": "main", "index": 0 }]]
+    },
+    "Fetch Approval Queue": {
+      "main": [[{ "node": "Has Pending Items?", "type": "main", "index": 0 }]]
+    },
+    "Has Pending Items?": {
+      "main": [
+        [{ "node": "Loop Over Tasks", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Loop Over Tasks": {
+      "main": [[{ "node": "Send Telegram Notification", "type": "main", "index": 0 }]]
+    },
+    "Approve Webhook": {
+      "main": [[{ "node": "Call Approve API", "type": "main", "index": 0 }]]
+    },
+    "Call Approve API": {
+      "main": [[{ "node": "Respond Approved", "type": "main", "index": 0 }]]
+    },
+    "Reject Webhook": {
+      "main": [[{ "node": "Call Reject API", "type": "main", "index": 0 }]]
+    },
+    "Call Reject API": {
+      "main": [[{ "node": "Respond Rejected", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "notes": "Setup: 1) Replace all YOUR_VPS_IP with your Hostinger VPS IP. 2) Add your Telegram bot credential and set YOUR_TELEGRAM_CHAT_ID. 3) Approve/reject via Telegram links or by calling the N8N webhooks: /webhook/approve?task_id=<id> and /webhook/reject?task_id=<id>. 4) Activate the workflow."
+}

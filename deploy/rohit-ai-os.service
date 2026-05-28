@@ -1,0 +1,22 @@
+[Unit]
+Description=Rohit AI Operating System API
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=exec
+User=root
+WorkingDirectory=/opt/rohit-ai-os
+EnvironmentFile=/opt/rohit-ai-os/.env
+ExecStart=/opt/rohit-ai-os/venv/bin/gunicorn api.main:app \
+    -w 2 \
+    -k uvicorn.workers.UvicornWorker \
+    --bind 127.0.0.1:8000 \
+    --timeout 120 \
+    --access-logfile /var/log/rohit-ai-os/access.log \
+    --error-logfile /var/log/rohit-ai-os/error.log
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,59 @@
+{
+  "name": "Rohit AI OS - Task Trigger",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ai-task",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://YOUR_VPS_IP:8000/tasks/",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={{ JSON.stringify({ task_type: $json.task_type, input: $json.input, context: $json.context || null }) }}"
+      },
+      "id": "2",
+      "name": "Call AI OS API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Call AI OS API", "type": "main", "index": 0 }]]
+    },
+    "Call AI OS API": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "notes": "Replace YOUR_VPS_IP with your Hostinger VPS IP. Import this in N8N via Settings > Import Workflow."
+}

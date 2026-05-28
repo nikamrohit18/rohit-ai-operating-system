@@ -1,0 +1,74 @@
+[
+  {
+    "category": "bio",
+    "text": "Rohit Nikam is a tech professional, AI systems architect, content creator, and entrepreneur. He specializes in building multi-agent AI ecosystems, agentic frameworks, and AI-powered automation pipelines. His personal brand and digital presence lives at rohitnikam.tech."
+  },
+  {
+    "category": "bio",
+    "text": "Rohit is deeply passionate about the intersection of AI and human productivity. He believes AI should augment human creativity, not replace it. His work focuses on building practical AI systems that solve real business problems."
+  },
+  {
+    "category": "expertise",
+    "text": "Rohit's core technical expertise includes: Python (3.11+), FastAPI, LangGraph for multi-agent orchestration, Claude AI (Anthropic), RAG architectures, vector databases (Qdrant), PostgreSQL, Redis, Docker, and N8N workflow automation."
+  },
+  {
+    "category": "expertise",
+    "text": "Rohit has deep knowledge of LLM application development — prompt engineering, tool use, agent design patterns, memory systems, and production deployment of AI systems. He exclusively uses Claude models (Sonnet for complex tasks, Haiku for fast/cheap tasks)."
+  },
+  {
+    "category": "expertise",
+    "text": "Rohit is an expert in SEO and GEO (Generative Engine Optimization) — structuring content so it gets cited by AI systems like ChatGPT, Perplexity, and Claude. He applies this to his own site rohitnikam.tech and advises others on AI-era content strategy."
+  },
+  {
+    "category": "projects",
+    "text": "Rohit's flagship project is the Rohit AI Operating System — a personal multi-agent AI ecosystem for content creation, research, SEO, social media automation, and a digital twin. Built with Python, FastAPI, LangGraph, and Claude on a Hostinger VPS."
+  },
+  {
+    "category": "projects",
+    "text": "Rohit runs multiple YouTube channels covering different niches: technology and AI insights, children's stories, health and wellness, and personal finance. He uses AI tools to scale content production across all channels."
+  },
+  {
+    "category": "projects",
+    "text": "Rohit is building rohitnikam.tech as his personal brand hub — a digital twin-powered site where visitors can chat with his AI representative, read his blog, and access his consulting services."
+  },
+  {
+    "category": "content",
+    "text": "Rohit is an active LinkedIn creator who shares insights on AI, agentic systems, productivity, and building in public. His content style is professional yet approachable, tech-forward but grounded in practical experience. He avoids hype and focuses on actionable insights."
+  },
+  {
+    "category": "content",
+    "text": "Rohit's content philosophy: share what actually works, not just theory. He documents his real building process — mistakes, pivots, and wins. His audience trusts him because he shows the messy middle, not just the polished result."
+  },
+  {
+    "category": "services",
+    "text": "Rohit offers AI consulting services for startups and businesses looking to implement AI systems. His focus areas are: building multi-agent pipelines, automating content workflows, integrating AI into existing business processes, and training teams on prompt engineering."
+  },
+  {
+    "category": "services",
+    "text": "For collaboration or consulting inquiries, Rohit can be reached at nikamrohit18@gmail.com. He is open to AI project consulting, speaking engagements, and content partnerships."
+  },
+  {
+    "category": "philosophy",
+    "text": "Rohit believes in self-hosted first — he prefers tools that run on his own VPS over SaaS subscriptions. This gives him data ownership, lower costs, and deeper understanding of the systems he builds."
+  },
+  {
+    "category": "philosophy",
+    "text": "Rohit's approach to AI: use it as leverage, not a crutch. He builds AI systems that handle repetitive work so he can focus on high-value thinking, creativity, and strategy. He always keeps a human in the loop for decisions that matter."
+  },
+  {
+    "category": "philosophy",
+    "text": "On publishing: Rohit believes no content should go live without human review. All his AI pipelines include an approval step — the AI drafts, the human decides. This applies to blog posts, LinkedIn content, and any public-facing material."
+  },
+  {
+    "category": "tech_stack",
+    "text": "Rohit's personal AI OS tech stack: Python 3.11, FastAPI, LangGraph, Anthropic Claude, PostgreSQL, Redis, Qdrant vector DB, fastembed for embeddings (BAAI/bge-small-en-v1.5), N8N on Hostinger VPS, Next.js on Vercel, ElevenLabs for voice."
+  },
+  {
+    "category": "background",
+    "text": "Rohit has hands-on experience deploying production AI systems — not just prototypes. He understands the challenges of real-world AI deployment: latency, cost management, error handling, and maintaining quality at scale."
+  },
+  {
+    "category": "background",
+    "text": "Rohit is based in Bangkok,Thailand and works across global time zones with clients and collaborators. He is active in the AI developer community, following the latest developments in LLMs, agent frameworks, and AI infrastructure."
+  }
+]
