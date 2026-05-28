@@ -15,7 +15,7 @@
     },
     {
       "parameters": {
-        "url": "http://YOUR_VPS_IP:8000/tasks/",
+        "url": "https://api.rohitnikam.tech/tasks/",
         "method": "POST",
         "sendHeaders": true,
         "headerParameters": {
@@ -55,5 +55,5 @@
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "notes": "Replace YOUR_VPS_IP with your Hostinger VPS IP. Import this in N8N via Settings > Import Workflow."
+  "notes": "Webhook URL after import: https://n8n.rohitnikam.tech/webhook/ai-task — POST {task_type, input, context} to trigger any agent."
 }

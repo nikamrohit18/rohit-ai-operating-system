@@ -13,7 +13,7 @@
     },
     {
       "parameters": {
-        "url": "http://YOUR_VPS_IP:8000/publish/queue",
+        "url": "https://api.rohitnikam.tech/publish/queue",
         "method": "GET"
       },
       "id": "2",
@@ -45,7 +45,7 @@
     {
       "parameters": {
         "chatId": "YOUR_TELEGRAM_CHAT_ID",
-        "text": "=📝 *New content awaiting approval*\n\n*Type:* {{ $json.task_type }}\n*Topic:* {{ $json.input }}\n\n*Preview:*\n{{ $json.output_preview }}\n\n✅ Approve: http://YOUR_VPS_IP:8000/publish/{{ $json.task_id }}/approve\n❌ Reject: http://YOUR_VPS_IP:8000/publish/{{ $json.task_id }}/reject\n\n_Or call from N8N using the webhooks below._",
+        "text": "=📝 *New content awaiting approval*\n\n*Type:* {{ $json.task_type }}\n*Topic:* {{ $json.input }}\n\n*Preview:*\n{{ $json.output_preview }}\n\n✅ Approve: https://api.rohitnikam.tech/publish/{{ $json.task_id }}/approve\n❌ Reject: https://api.rohitnikam.tech/publish/{{ $json.task_id }}/reject\n\n_Or call from N8N using the webhooks below._",
         "additionalFields": { "parse_mode": "Markdown" }
       },
       "id": "5",
@@ -69,7 +69,7 @@
     },
     {
       "parameters": {
-        "url": "=http://YOUR_VPS_IP:8000/publish/{{ $json.query.task_id }}/approve",
+        "url": "=https://api.rohitnikam.tech/publish/{{ $json.query.task_id }}/approve",
         "method": "POST"
       },
       "id": "7",
@@ -103,7 +103,7 @@
     },
     {
       "parameters": {
-        "url": "=http://YOUR_VPS_IP:8000/publish/{{ $json.query.task_id }}/reject",
+        "url": "=https://api.rohitnikam.tech/publish/{{ $json.query.task_id }}/reject",
         "method": "POST"
       },
       "id": "10",
@@ -155,5 +155,5 @@
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "notes": "Setup: 1) Replace all YOUR_VPS_IP with your Hostinger VPS IP. 2) Add your Telegram bot credential and set YOUR_TELEGRAM_CHAT_ID. 3) Approve/reject via Telegram links or by calling the N8N webhooks: /webhook/approve?task_id=<id> and /webhook/reject?task_id=<id>. 4) Activate the workflow."
+  "notes": "Setup: 1) Add your Telegram bot credential (Settings > Credentials > Add > Telegram). 2) In the 'Send Telegram Notification' node, set your Chat ID. 3) Approve/reject by clicking the links in Telegram or calling: https://n8n.rohitnikam.tech/webhook/approve?task_id=<id>. 4) Activate the workflow."
 }
