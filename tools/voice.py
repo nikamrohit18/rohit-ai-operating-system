@@ -11,6 +11,9 @@ def clean_for_speech(text: str) -> str:
     text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)  # [links](url)
     text = re.sub(r'[^\x00-\x7F]', '', text)        # emojis and non-ASCII
     text = re.sub(r'\n{3,}', '\n\n', text)          # excessive newlines
+    text = re.sub(r'\n\n+', '. ', text)             # paragraph breaks become pauses
+    text = re.sub(r'\n', ' ', text)                 # single newlines become spaces
+    text = re.sub(r'\.{2,}', '.', text)             # collapse multiple periods
     return text.strip()
 
 
@@ -30,7 +33,7 @@ def text_to_speech(text: str) -> bytes:
         json={
             "text": text,
             "model_id": "eleven_turbo_v2_5",
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
+            "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "speed": 0.9},
         },
         timeout=30,
     )
