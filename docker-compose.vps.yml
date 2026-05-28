@@ -60,6 +60,11 @@ services:
       - traefik.http.routers.rohit-api.entrypoints=web,websecure
       - traefik.http.routers.rohit-api.tls.certresolver=mytlschallenge
       - traefik.http.services.rohit-api.loadbalancer.server.port=8000
+      - traefik.http.middlewares.rohit-cors.headers.accesscontrolalloworiginlist=*
+      - traefik.http.middlewares.rohit-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS,PATCH
+      - traefik.http.middlewares.rohit-cors.headers.accesscontrolallowheaders=Content-Type,Authorization,Accept
+      - traefik.http.middlewares.rohit-cors.headers.accesscontrolmaxage=100
+      - traefik.http.routers.rohit-api.middlewares=rohit-cors@docker
     networks:
       - default
       - n8n_default
