@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     qdrant_host: str = "localhost"
     qdrant_port: int = 6333
     tavily_api_key: str = ""
+    api_key: str = ""
     n8n_webhook_secret: str = ""
     elevenlabs_api_key: str = ""
     elevenlabs_voice_id: str = "21m00Tcm4TlvDq8ikWAM"

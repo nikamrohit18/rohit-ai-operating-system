@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from memory.vector_store import VectorStore
 from memory.postgres import get_session, KnowledgeItem
+from api.auth import require_api_key
 
-router = APIRouter(prefix="/knowledge", tags=["knowledge"])
+router = APIRouter(prefix="/knowledge", tags=["knowledge"], dependencies=[Depends(require_api_key)])
 
 _store: VectorStore | None = None
 

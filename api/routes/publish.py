@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from memory.postgres import get_session, Task
+from api.auth import require_api_key
 
-router = APIRouter(prefix="/publish", tags=["publish"])
+router = APIRouter(prefix="/publish", tags=["publish"], dependencies=[Depends(require_api_key)])
 
 PUBLISHABLE_TYPES = {"content", "seo"}
 

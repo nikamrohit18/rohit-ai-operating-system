@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel
 from tools.voice import text_to_speech
 from memory.postgres import get_session, Task
+from api.auth import require_api_key
 
 router = APIRouter(prefix="/voice", tags=["voice"])
 
@@ -11,7 +12,7 @@ class VoiceRequest(BaseModel):
     text: str
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(require_api_key)])
 async def synthesize(payload: VoiceRequest):
     """Convert text to speech. Returns MP3 audio."""
     if not payload.text.strip():

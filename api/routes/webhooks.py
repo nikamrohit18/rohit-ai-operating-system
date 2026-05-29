@@ -1,12 +1,13 @@
 import hmac
 import hashlib
 import uuid
-from fastapi import APIRouter, HTTPException, Request, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks
 from memory.postgres import get_session, Task
 from config import get_settings
 from api.routes.tasks import _run_task
+from api.auth import require_api_key
 
-router = APIRouter(prefix="/webhooks", tags=["webhooks"])
+router = APIRouter(prefix="/webhooks", tags=["webhooks"], dependencies=[Depends(require_api_key)])
 
 
 def _verify_signature(secret: str, body: bytes, signature: str) -> bool:

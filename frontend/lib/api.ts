@@ -7,7 +7,7 @@ export interface TaskResponse {
 }
 
 export async function askDigitalTwin(question: string): Promise<TaskResponse> {
-  const res = await fetch(`${API_BASE}/tasks/`, {
+  const res = await fetch(`/api/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ task_type: "digital_twin", input: question }),

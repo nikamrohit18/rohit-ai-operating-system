@@ -1,9 +1,10 @@
 import uuid
 from typing import Optional
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel
 from orchestrator.main import orchestrator
 from memory.postgres import get_session, Task
+from api.auth import require_api_key
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
@@ -53,7 +54,7 @@ def _run_task(task_id: str, task_type: str, input_text: str, context: Optional[d
         session.close()
 
 
-@router.post("/", response_model=TaskResponse, status_code=202)
+@router.post("/", response_model=TaskResponse, status_code=202, dependencies=[Depends(require_api_key)])
 async def create_task(payload: TaskCreate, background_tasks: BackgroundTasks):
     task_id = str(uuid.uuid4())
     session = get_session()
@@ -89,7 +90,7 @@ async def get_task(task_id: str):
     return TaskResponse(task_id=task.id, status=task.status, output=task.output, sources=sources)
 
 
-@router.get("/", response_model=list[TaskResponse])
+@router.get("/", response_model=list[TaskResponse], dependencies=[Depends(require_api_key)])
 async def list_tasks(limit: int = 20):
     session = get_session()
     try:
