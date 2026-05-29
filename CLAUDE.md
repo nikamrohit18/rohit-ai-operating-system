@@ -77,8 +77,8 @@ rohit-ai-operating-system/
 │   ├── rohit-ai-os.service    # systemd service (reference only — Docker used in prod)
 │   └── nginx.conf             # Nginx config (reference only — Traefik used in prod)
 ├── n8n_workflows/
-│   ├── task_trigger.json      # Import into N8N — replace YOUR_VPS_IP
-│   └── publish_pipeline.json  # Approval pipeline — Telegram notify, approve/reject
+│   ├── task_trigger.json      # Webhook trigger → POST /tasks/ — live at /webhook/ai-task
+│   └── publish_pipeline.json  # Approval pipeline — polls queue, Telegram notify, approve/reject
 └── frontend/
     ├── app/page.tsx            # Digital Twin chat UI with voice playback
     ├── app/layout.tsx          # Metadata + favicon
@@ -238,3 +238,38 @@ npx vercel --prod
 ```
 
 Custom domain: `twin.rohitnikam.tech` → Vercel A record `76.76.21.21`
+
+## N8N Workflows
+
+Both workflows are imported and active at **n8n.rohitnikam.tech**. URLs use the production domain — no placeholders remain.
+
+### Workflow 1: Task Trigger (`task_trigger.json`)
+
+Exposes a webhook that forwards any task to the API.
+
+- **Webhook URL:** `https://n8n.rohitnikam.tech/webhook/ai-task`
+- **Method:** POST
+- **Payload:** `{ "task_type": "...", "input": "...", "context": {} }`
+
+Chain: `Webhook → Call AI OS API → Respond to Webhook`
+
+### Workflow 2: Content Approval Pipeline (`publish_pipeline.json`)
+
+Polls the approval queue every 15 minutes. Sends a Telegram notification for each completed content/seo task with approve/reject links.
+
+Chain: `Poll Every 15 Min → Fetch Approval Queue → Send Telegram Notification`
+
+Approve/reject chains (separate triggers in same workflow):
+`Approve Webhook → Call Approve API → Respond Approved`
+`Reject Webhook → Call Reject API → Respond Rejected`
+
+**Approve URL:** `https://n8n.rohitnikam.tech/webhook/approve?taskid={task_id}`
+**Reject URL:** `https://n8n.rohitnikam.tech/webhook/reject?taskid={task_id}`
+
+### N8N Setup Gotchas
+
+- **Query param is `taskid` (no underscore)** — the Telegram links use `?taskid=` and the Call API nodes reference `$json.query.taskid`. Using `task_id` (with underscore) breaks it.
+- **Approve/Reject API nodes must use POST** — clicking a Telegram link opens a browser (GET). The N8N webhook receives the GET and forwards it as POST to the API. If the HTTP Request node defaults to GET, the API returns 405.
+- **No IF node or SplitInBatches in the pipeline** — the "Has Pending Items?" IF node caused routing failures (items went through false branch). The "Loop Over Tasks" SplitInBatches node caused "different path" errors. Both were removed. N8N handles empty arrays natively — if the queue is empty, downstream nodes don't execute.
+- **Telegram links point to N8N, not the API directly** — clicking a link triggers the N8N webhook which calls the API as POST. Direct links to the API would fail (405) since approve/reject are POST-only.
+- **Telegram bot token** = Access Token in N8N credential. Chat ID = `1292664278` (Rohit's personal chat).
