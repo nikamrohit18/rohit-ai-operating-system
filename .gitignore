@@ -11,3 +11,4 @@ node_modules/
 frontend/.next/
 frontend/out/
 scripts/check_config.py
+frontend/.env.local
