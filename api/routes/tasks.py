@@ -23,13 +23,21 @@ class TaskResponse(BaseModel):
 
 
 def _run_task(task_id: str, task_type: str, input_text: str, context: Optional[dict]):
+    from memory.redis_cache import RedisCache
+    ctx = dict(context or {})
+    session_id = ctx.get("session_id") if task_type == "digital_twin" else None
+    cache = RedisCache() if session_id else None
+
+    if cache and session_id:
+        ctx["history"] = cache.get_history(session_id)
+
     session = get_session()
     try:
         result = orchestrator.invoke({
             "task_id": task_id,
             "task_type": task_type,
             "input": input_text,
-            "context": context or {},
+            "context": ctx,
             "output": None,
             "status": "running",
             "error": None,
@@ -44,6 +52,10 @@ def _run_task(task_id: str, task_type: str, input_text: str, context: Optional[d
             if sources:
                 task.context = {**(task.context or {}), "sources": sources}
             session.commit()
+
+        if cache and session_id and result.get("output"):
+            cache.append_to_history(session_id, "user", input_text)
+            cache.append_to_history(session_id, "assistant", result["output"])
     except Exception as e:
         task = session.query(Task).filter(Task.id == task_id).first()
         if task:

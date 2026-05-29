@@ -25,6 +25,17 @@ class BaseAgent(ABC):
     def call_claude_fast(self, system: str, user: str) -> str:
         return self.call_claude(system, user, model=HAIKU, max_tokens=1024)
 
+    def call_claude_with_history(
+        self, system: str, messages: list, model: str = SONNET, max_tokens: int = 2048
+    ) -> str:
+        response = self.client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+        )
+        return response.content[0].text
+
     @abstractmethod
     def run(self, state: OrchestratorState) -> dict:
         pass

@@ -23,6 +23,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const sessionId = useRef<string>(crypto.randomUUID());
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +39,7 @@ export default function Home() {
     setMessages((prev) => [...prev, userMsg, loadingMsg]);
 
     try {
-      const { task_id } = await askDigitalTwin(question);
+      const { task_id } = await askDigitalTwin(question, sessionId.current);
 
       // Poll until completed
       let result = await pollTask(task_id);

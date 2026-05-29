@@ -6,11 +6,15 @@ export interface TaskResponse {
   output: string | null;
 }
 
-export async function askDigitalTwin(question: string): Promise<TaskResponse> {
+export async function askDigitalTwin(question: string, sessionId?: string): Promise<TaskResponse> {
   const res = await fetch(`/api/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ task_type: "digital_twin", input: question }),
+    body: JSON.stringify({
+      task_type: "digital_twin",
+      input: question,
+      context: sessionId ? { session_id: sessionId } : {},
+    }),
   });
   if (!res.ok) throw new Error("Failed to submit question");
   return res.json();

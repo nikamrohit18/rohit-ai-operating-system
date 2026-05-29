@@ -33,17 +33,20 @@ class DigitalTwinAgent(BaseAgent):
             results = self.vector_store.search(state["input"], limit=5)
             context_chunks = [r["text"] for r in results if r["score"] > 0.3]
 
-            user_prompt = state["input"]
+            user_content = state["input"]
             if context_chunks:
                 context_block = "\n\n".join(f"- {chunk}" for chunk in context_chunks)
-                user_prompt = (
+                user_content = (
                     f"Relevant knowledge about Rohit:\n{context_block}"
                     f"\n\n---\nQuestion: {state['input']}"
                 )
 
-            output = self.call_claude(
+            history = (state.get("context") or {}).get("history", [])
+            messages = history + [{"role": "user", "content": user_content}]
+
+            output = self.call_claude_with_history(
                 system=SYSTEM_PROMPT,
-                user=user_prompt,
+                messages=messages,
                 max_tokens=2048,
             )
             return {"output": output, "status": "completed"}
